@@ -87,7 +87,15 @@ public class PlayerManager : MonoBehaviour
 	[SerializeField] private float _moveSpeed = 5f; //On définit ici la vitesse du character. Vous pouvez la modifier. 5f = le nombre 5 en float (décimal).
 	[SerializeField] private Rigidbody2D _rb; //On place ici le rigidbody du character
 	private Vector2 _movement;
-	
+
+    public float dashSpeed = 50f;
+    public float dashDuration = 0.1f;
+    public float dashCooldown = 1f;
+	public float dashTimer = 0;
+	public Vector2 dashDirection = Vector2.right;
+
+    private bool isDashing = false;
+
 
     // Fonction qui se lance à chaque frame.
     void Update() {
@@ -96,57 +104,76 @@ public class PlayerManager : MonoBehaviour
     }
 
 	void FixedUpdate() {
-		//On récupère si les touches de directions horizontales et verticales sont pressées, cela donne un nombre entre 0 (pas pressé) et 1 (pressé).
-        _movement.x = Input.GetAxisRaw("Horizontal");
-		_movement.y = Input.GetAxisRaw("Vertical");
+		if (isDashing) {
+			_rb.MovePosition(_rb.position + dashDirection * dashSpeed * Time.fixedDeltaTime);
+			dashTimer -= Time.fixedDeltaTime;
 
-		//Si la valeur récupérée est supérieure à 0, ça veut dire que la touche est pressée.
-		bool isMovingHorizontal = Mathf.Abs(_movement.x) > 0;
-		bool isMovingVertical = Mathf.Abs(_movement.y) > 0;
-
-		//On évite que le joueur bouge horizontalement ET verticalement.
-		if (Mathf.Abs(_movement.x) > 0)
-        {
-            isMovingHorizontal = true;
-            isMovingVertical = false;
-        }
-
-		//S'il se déplace verticalement, la priorité est au déplacement vertical
-        if (Mathf.Abs(_movement.y) > 0)
-        {
-            isMovingHorizontal = false;
-            isMovingVertical = true;
-        }
-
-		//On définit le vecteur de mouvement en fonction des données précédentes.
-        if (isMovingHorizontal)
-        {
-            _movement = Vector2.right * _movement.normalized.x;
-        }
-        else if (isMovingVertical)
-        {
-            _movement = Vector2.up * _movement.normalized.y;
-        }
-		
-		//Si le chronomètre n'est pas arrêté, on ajoute le laps de temps écoulé au chronomètre et on actualise le HUD
-		if(!endTimer){
-			timerGame += Time.fixedDeltaTime;
-			if(hud != null){ //On édite le HUD
-				hud.updateTimer(timerGame);
+			if (dashTimer <= 0)
+			{
+				dashTimer = 0;
+				isDashing = false;
 			}
-		}
+		}else if (Input.GetKeyDown(KeyCode.LeftShift)) {
+			Debug.Log("shift");
+			isDashing = true;
+			dashTimer = dashDuration;
+        }else {
+
+
+
+			//On récupère si les touches de directions horizontales et verticales sont pressées, cela donne un nombre entre 0 (pas pressé) et 1 (pressé).
+			_movement.x = Input.GetAxisRaw("Horizontal");
+			_movement.y = Input.GetAxisRaw("Vertical");
+
+			//Si la valeur récupérée est supérieure à 0, ça veut dire que la touche est pressée.
+			bool isMovingHorizontal = Mathf.Abs(_movement.x) > 0;
+			bool isMovingVertical = Mathf.Abs(_movement.y) > 0;
+
+			//On évite que le joueur bouge horizontalement ET verticalement.
+			if (Mathf.Abs(_movement.x) > 0)
+			{
+				isMovingHorizontal = true;
+				isMovingVertical = false;
+			}
+
+			//S'il se déplace verticalement, la priorité est au déplacement vertical
+			if (Mathf.Abs(_movement.y) > 0)
+			{
+				isMovingHorizontal = false;
+				isMovingVertical = true;
+			}
+
+			//On définit le vecteur de mouvement en fonction des données précédentes.
+			if (isMovingHorizontal)
+			{
+				_movement = Vector2.right * _movement.normalized.x;
+			}
+			else if (isMovingVertical)
+			{
+				_movement = Vector2.up * _movement.normalized.y;
+			}
+			dashDirection = _movement;
+
+			//Si le chronomètre n'est pas arrêté, on ajoute le laps de temps écoulé au chronomètre et on actualise le HUD
+			if (!endTimer){
+				timerGame += Time.fixedDeltaTime;
+				if(hud != null){ //On édite le HUD
+					hud.updateTimer(timerGame);
+				}
+			}
 		
-		//Si le personnage est gelé, (si la variable freeze est supérieure à 0), on diminue la variable freeze du laps de temps écoulé, mesuré par Time.fixedDeltaTime).
-		if(freeze > 0){
-			freeze = Mathf.Max(0, freeze - Time.fixedDeltaTime);
+			//Si le personnage est gelé, (si la variable freeze est supérieure à 0), on diminue la variable freeze du laps de temps écoulé, mesuré par Time.fixedDeltaTime).
+			if(freeze > 0){
+				freeze = Mathf.Max(0, freeze - Time.fixedDeltaTime);
+			}
+			//Si freeze vaut 0, le personnage n'est pas gelé. On le déplace via son rigidbody d'une valeur égale à sa position + le vecteur mouvement défini dans Update * la vitesse _moveSpeed * le laps de temps écoulé Time.fixedDeltaTime)
+			else
+			{
+				_rb.MovePosition(_rb.position + _movement * _moveSpeed * Time.fixedDeltaTime);
 		}
-		//Si freeze vaut 0, le personnage n'est pas gelé. On le déplace via son rigidbody d'une valeur égale à sa position + le vecteur mouvement défini dans Update * la vitesse _moveSpeed * le laps de temps écoulé Time.fixedDeltaTime)
-		else
-		{
-			_rb.MovePosition(_rb.position + _movement * _moveSpeed * Time.fixedDeltaTime);
-		}
-		
-		QuitGame();
+        }
+
+        QuitGame();
 
 	}
 	
