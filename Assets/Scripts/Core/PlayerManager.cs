@@ -88,8 +88,8 @@ public class PlayerManager : MonoBehaviour
 	[SerializeField] private Rigidbody2D _rb; //On place ici le rigidbody du character
 	private Vector2 _movement;
 
-    public float dashSpeed = 50f;
-    public float dashDuration = 0.1f;
+    public float dashSpeed = 60f;
+    public float dashDuration = 0.05f;
     public float dashCooldown = 1f;
 	public float dashTimer = 0;
 	public Vector2 dashDirection = Vector2.right;
