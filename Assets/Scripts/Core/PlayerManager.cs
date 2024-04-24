@@ -39,6 +39,18 @@ public class PlayerManager : MonoBehaviour
 	private int nbDeath = 0; //Enregistre le nombre de morts.
 	private float timerGame = 0;
 	private bool endTimer = false;
+	private int nbFlame = 0;
+
+	public void AddFlame(){
+		nbFlame++;
+		if(hud != null){ //On édite le HUD
+			hud.updateFlame(nbFlame);
+		}
+	}
+
+	public int GetNbFlame(){
+		return nbFlame;
+	}
 	
 	/* [ADDED] */
 	public bool hasKey = false;
