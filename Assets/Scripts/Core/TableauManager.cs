@@ -25,7 +25,7 @@ public class TableauManager : MonoBehaviour
 	[SerializeField] private int startTableau = 1; //Le premier tableau de démarrage
 	public static int activeTableau; //Mémorise le numéro du tableau actuel
 	public static int lastTableau = 0; //Mémorise le numéro du tableau final
-	private static Vector2 checkpointPosition = new Vector2 (0f, 0f); //Mémorise à quel endroit téléporter le joueur s'il se fait toucher par un obstacle
+	private static Vector2 checkpointPosition = new Vector2 (-6.5f, 0f); //Mémorise à quel endroit téléporter le joueur s'il se fait toucher par un obstacle
 
 	// Fonction qui se lance au démarrage. Prend tous les objets enfants du TableauManager et les range dans l'attribut tableaux.
 	void Start() {

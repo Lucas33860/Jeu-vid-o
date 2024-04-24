@@ -39,6 +39,7 @@ public class PlayerManagerAnimated : MonoBehaviour
 	private int nbDeath = 0; //Enregistre le nombre de morts.
 	private float timerGame = 0;
 	private bool endTimer = false;
+
 	
 	//Ajoute 1 au compteur de morts
 	public void AddDeath(){
