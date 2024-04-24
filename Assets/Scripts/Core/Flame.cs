@@ -8,8 +8,7 @@ public class Flame : MonoBehaviour
 		if (col.gameObject.tag == "Player") {
 			//On ajoute une flamme au joueur
 			col.gameObject.GetComponent<PlayerManager>().AddFlame();
-			Destroy(gameObject); //On détruit l'objet
-			
+			Destroy(gameObject); //On détruit l'objet	
 		}
 	}
 }
