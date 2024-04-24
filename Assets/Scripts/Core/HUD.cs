@@ -9,6 +9,7 @@ public class HUD : MonoBehaviour
 	[SerializeField] private GameObject deathText; //On insère l'objet texte qui affiche le nombre de morts
 	[SerializeField] private GameObject levelText; //On insère l'objet texte qui affiche le numéro du niveau
 	[SerializeField] private GameObject timerText; //On insère l'objet texte qui affiche le compteur de temps
+	[SerializeField] private GameObject flameText; //On insère l'objet texte qui affiche le compteur de temps
 	
 	public void updateDeathText(int nbDeath){
 		deathText.GetComponent<TMP_Text>().text = "Morts : " + nbDeath;
@@ -21,5 +22,9 @@ public class HUD : MonoBehaviour
 	public void updateTimer(float time){
 		//Permet d'arrondir le temps à deux chiffres après la virgule
 		timerText.GetComponent<TMP_Text>().text = "Temps " + time.ToString("F2")  +"s";
+	}
+
+	public void updateFlame(int nbFlame){
+		flameText.GetComponent<TMP_Text>().text = "" + nbFlame;
 	}
 }
